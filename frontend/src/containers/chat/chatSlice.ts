@@ -1,20 +1,23 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store.ts';
-import { fetchPostMessage } from '../store/thunks/thunks.ts';
+import { fetchMessages, fetchPostMessage } from '../store/thunks/thunks.ts';
 
 interface dishState {
-  object: IMessage[];
+  formMessage: IMessage[];
+  responseMessage: IResponseMessage[];
   isFetching: boolean;
   error: boolean;
 }
 
 const initialState: dishState = {
-  object: [],
+  formMessage: [],
+  responseMessage: [],
   isFetching: false,
   error: false,
 };
 
-export const messageList = (state: RootState) => state.messages.object;
+export const messageList = (state: RootState) => state.messages.formMessage;
+export const resMsgList = (state: RootState) => state.messages.responseMessage;
 
 export const messagesSlice = createSlice({
   name: "messages",
@@ -33,7 +36,21 @@ export const messagesSlice = createSlice({
       .addCase(fetchPostMessage.rejected, (state) => {
         state.isFetching = false;
         state.error = true;
-      })},
+      })
+      .addCase(fetchMessages.pending, (state) => {
+        state.isFetching = true;
+        state.error = false;
+      })
+      .addCase(fetchMessages.fulfilled, (state, action: PayloadAction<IResponseMessage[]>) => {
+        state.isFetching = true;
+        state.responseMessage = action.payload;
+      })
+      .addCase(fetchMessages.rejected, (state) => {
+        state.isFetching = false;
+        state.error = true;
+      })
+  },
+
 });
 
 export const messagesReducer = messagesSlice.reducer;

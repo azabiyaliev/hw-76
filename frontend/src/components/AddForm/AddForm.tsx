@@ -42,8 +42,7 @@ const AddForm = () => {
           display: 'grid',
           gap: 2,
           flexWrap: 'wrap',
-          width: '50%',
-          borderRight: "4px solid grey"
+          width: '100%',
         }}
       >
         <TextField
@@ -60,7 +59,7 @@ const AddForm = () => {
           sx={{
             display: 'grid',
             gap: 2,
-            width: '80%',
+            width: '100%',
           }}
         >
           <TextField
