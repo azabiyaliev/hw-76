@@ -1,6 +1,8 @@
 export interface IMessage {
     message: string;
+    author: string;
+    id: string;
     datetime: string;
 }
 
-export type IMessageWithDateTime = Omit<IMessage, "datetime">
+export type IMessageWithDateTimeAndId = Omit<IMessage, "datetime", "id">
