@@ -5,13 +5,13 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
 import { resMsgList } from './chatSlice.ts';
 import { useEffect } from 'react';
 import { fetchMessages } from '../store/thunks/thunks.ts';
-
+import dayjs from 'dayjs'
 
 const Chat = () => {
 
   const dispatch = useAppDispatch();
   const messages = useAppSelector(resMsgList);
-
+  const reverseMessages = [...messages].reverse();
   console.log(messages);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ const Chat = () => {
             mt: 10,
           }}
         >
-            {messages.map((message) => (
+            {reverseMessages.map((message) => (
               <>
                 <Card sx={{ maxWidth: 345, mb: 2, boxShadow: 4, mx: "auto"}}>
                   <CardContent sx={{ padding: '10px', gridRow: '1rem, 1rem' }}>
@@ -41,7 +41,7 @@ const Chat = () => {
                       {message.author}
                     </Typography>
                     <Typography>
-                      {message.datetime}
+                      {dayjs(message.datetime).format('D MMMM YYYY, HH:mm')}
                     </Typography>
                   </CardContent>
                   <CardContent>

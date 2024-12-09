@@ -5,8 +5,13 @@ const messagesRouter = express.Router();
 
 messagesRouter.get("/", async (req, res) => {
     const messages = await fileDb.getItems();
-    console.log(messages);
-    res.send(messages);
+    const dateQuery = req.query.datetime as string;
+    if(dateQuery) {
+        res.send({messages});
+        console.log(dateQuery);
+    } else {
+        res.send(messages)
+    }
 });
 
 messagesRouter.post("/", async (req, res) => {
@@ -15,8 +20,12 @@ messagesRouter.post("/", async (req, res) => {
         author: req.body.author
     }
 
-    const saveMessage = await fileDb.addItem(message);
-    res.send(saveMessage);
+    if (message.message.trim().length === 0 || message.author.trim().length === 0) {
+        res.status(400).send({error: "Author and message must be present in the request."});
+    } else {
+        const saveMessage: IMessageWithDateTimeAndId = await fileDb.addItem(message);
+        res.status(200).send(saveMessage);
+    }
 })
 
 export default messagesRouter;

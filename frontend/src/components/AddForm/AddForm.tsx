@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Box, Button, TextField } from '@mui/material';
 import { useAppDispatch } from '../../app/hooks.ts';
-import { fetchPostMessage } from '../../containers/store/thunks/thunks.ts';
+import { fetchMessages, fetchPostMessage } from '../../containers/store/thunks/thunks.ts';
+import { toast } from 'react-toastify';
 
 
 const initialForm = {
@@ -27,7 +28,15 @@ const AddForm = () => {
   const submitForm = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await dispatch(fetchPostMessage({...form}));
+      if(form.message.trim().length === 0 || form.author.trim().length === 0) {
+        toast.error("Fill in all fields");
+        setForm(initialForm);
+      } else {
+        await dispatch(fetchPostMessage({...form}));
+        toast.success('Message successfully added');
+        setForm(initialForm);
+        dispatch(fetchMessages());
+      }
     } catch (e) {
       console.log(e);
     }
